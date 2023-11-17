@@ -3,7 +3,7 @@ const validator = require("validator");
 
 let userSchema = new mongoose.Schema(
   {
-    name: {
+    userName: {
       type: String,
     },
     email: {
@@ -27,8 +27,8 @@ let userSchema = new mongoose.Schema(
     },
   },
   {
-    collection: "user",
+    collection: "userData",
   }
 );
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("userData", userSchema);
