@@ -1,11 +1,25 @@
 const express = require("express");
 const { checkUser } = require("../controllers/login");
-const { insertVerifyUser } = require("../controllers/signUp");
+const { insertVerifyUser, insertSignUpUser } = require("../controllers/signUp");
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/:token", async (req, res) => {
   try {
-  } catch (error) {}
+    const token = req.params.token;
+    const response = await insertSignUpUser(token);
+    res.status(200).send(response);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(
+      `<html>
+    <body>
+    <h4>Registeration failed.</h4>
+    <h5>Unexpected error.</h5>
+    <p>Try again</p>
+    </body>
+    </html>`
+    );
+  }
 });
 
 router.post("/verify", async (req, res) => {

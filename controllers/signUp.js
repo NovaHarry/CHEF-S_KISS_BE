@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 var jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const userVerificationSchema = require("../models/userVerificationSchema");
+const userSchema = require("../models/userSchema");
 dotenv.config();
 
 const insertVerifyUser = async (userName, email, password) => {
@@ -21,7 +22,7 @@ const insertVerifyUser = async (userName, email, password) => {
       token: token,
     });
 
-    const activationLink = "www.google.com";
+    const activationLink = `http://localhost:5000/signup/${token}`;
 
     const content = `
     <h4>Hi, there!</h4>
@@ -38,8 +39,46 @@ const insertVerifyUser = async (userName, email, password) => {
 };
 
 const generateToken = (email) => {
-  const token = jwt.sign(email, process.env.signup_token);
+  const token = jwt.sign({ email }, process.env.signup_token);
   return token;
 };
 
-module.exports = { insertVerifyUser };
+const insertSignUpUser = async (token) => {
+  try {
+    const userVerify = await userVerificationSchema.findOne({ token: token });
+
+    if (userVerify) {
+      const newUser = new userSchema({
+        userName: userVerify.userName,
+        email: userVerify.email,
+        password: userVerify.password,
+      });
+
+      await newUser.save();
+
+      await userVerificationSchema.deleteOne({ token: token });
+
+      const content = `<h4>Hi, there!</h4>
+    <h5>Welcome to the app</h5>
+    <p>You are successfully registered.</p>`;
+
+      sendMail(newUser.email, "Registeration successful", content);
+      return `<h4>Registeration successful.</h4>
+    <h5>Welcome to the app</h5>
+    <p>You are successfully registered.</p>`;
+    }
+    return `<h4>Registeration failed.</h4>
+    <h5>Link expired!!!!.</h5>
+    <p>Try again</p>`;
+  } catch (error) {
+    console.log(error);
+    return `<html>
+    <body>
+    <h4>Registeration failed.</h4>
+    <h5>Unexpected error.</h5>
+    <p>Try again</p>
+    </body>
+    </html>`;
+  }
+};
+module.exports = { insertVerifyUser, insertSignUpUser };

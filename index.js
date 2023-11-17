@@ -10,6 +10,8 @@ connectDb();
 
 //ROUTER
 const signUpRouter = require("./routes/signUp");
+const loginRouter = require("./routes/login");
+const homeRouter = require("./routes/home");
 
 //CORS
 const cors = require("cors");
@@ -17,6 +19,8 @@ app.use(cors({ origin: "*" }));
 
 app.use(express.json());
 app.use("/signup", signUpRouter);
+app.use("/login", loginRouter);
+app.use("/home", homeRouter);
 
 app.get("/", async (req, res) => {
   res.send("working");
