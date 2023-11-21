@@ -26,6 +26,8 @@ const authenticateUser = async (email, password) => {
     if (validPassword) {
       const token = jwt.sign({ email }, process.env.login_token);
 
+      console.log(token);
+
       const response = {
         id: userCheck._id,
         userName: userCheck.userName,

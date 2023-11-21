@@ -1,5 +1,6 @@
 const express = require("express");
 const { authorizeUser } = require("../controllers/login");
+const redisClient = require("../redis");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
