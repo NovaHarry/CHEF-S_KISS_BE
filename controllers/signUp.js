@@ -23,7 +23,7 @@ const insertVerifyUser = async (userName, email, password) => {
       randomString: "",
     });
 
-    const activationLink = `http://localhost:5000/signup/${token}`;
+    const activationLink = `https://chefs-kiss-be.onrender.com/signup/${token}`;
 
     const content = `
     <h4>Hi, there!</h4>
