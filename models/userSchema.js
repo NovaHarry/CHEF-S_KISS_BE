@@ -25,6 +25,7 @@ let userSchema = new mongoose.Schema(
     token: {
       type: String,
     },
+    randomString: { type: String },
   },
   {
     collection: "userData",

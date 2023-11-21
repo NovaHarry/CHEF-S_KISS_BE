@@ -23,6 +23,7 @@ const userVerificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    randomString: { type: String },
   },
   {
     collection: "user_verification",

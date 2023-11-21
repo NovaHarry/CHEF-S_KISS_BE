@@ -20,6 +20,7 @@ const insertVerifyUser = async (userName, email, password) => {
       email: email,
       password: hashedPassword,
       token: token,
+      randomString: "",
     });
 
     const activationLink = `http://localhost:5000/signup/${token}`;
@@ -52,11 +53,13 @@ const insertSignUpUser = async (token) => {
         userName: userVerify.userName,
         email: userVerify.email,
         password: userVerify.password,
+        token: token,
+        randomString: "",
       });
 
       await newUser.save();
 
-      await userVerificationSchema.deleteOne({ token: token });
+      await userVerificationSchema.deleteMany({ email: userVerify.email });
 
       const content = `<h4>Hi, there!</h4>
     <h5>Welcome to the app</h5>
