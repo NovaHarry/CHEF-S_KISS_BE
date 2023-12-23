@@ -1,7 +1,5 @@
 const express = require("express");
 const recipeSchema = require("../models/recipeSchema");
-const userSchema = require("../models/userSchema");
-const redisClient = require("../redis");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -15,11 +13,40 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/recipe/:email", async (req, res) => {
+  try {
+    let myRecipes = await recipeSchema.find({ email: req.params.email });
+    res.status(200).send(myRecipes);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send("Server Busy");
+  }
+});
+
 router.get("/:id", async (req, res) => {
   try {
     let openRecipeData = await recipeSchema.findOne({ _id: req.params.id });
 
     res.status(200).send(openRecipeData);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send("Server Busy");
+  }
+});
+
+router.put("/comments/:id", async (req, res) => {
+  try {
+    let openRecipeData = await recipeSchema.findOne({ _id: req.params.id });
+
+    await recipeSchema.findOneAndUpdate(
+      { _id: openRecipeData._id },
+      { $set: { comments: [...openRecipeData.comments, req.body.comments] } },
+      { new: true }
+    );
+
+    let updatedData = await recipeSchema.findOne({ _id: openRecipeData._id });
+
+    res.status(200).send(updatedData);
   } catch (error) {
     console.log(error);
     res.status(400).send("Server Busy");

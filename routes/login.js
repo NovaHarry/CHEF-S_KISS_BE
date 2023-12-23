@@ -32,7 +32,9 @@ router.get("/forgot-password/:email", async (req, res) => {
     const userById = await userSchema.findOne({ email: req.params.email });
 
     if (userById) {
-      const activationLink = `https://funny-quokka-bd36b6.netlify.app/update-password/${userById.token}`;
+      //const activationLink = `https://funny-quokka-bd36b6.netlify.app/update-password/${userById.token}`;
+
+      const activationLink = `https://localhost:3000/update-password/${userById.token}`;
 
       randomStringss();
 
